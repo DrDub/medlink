@@ -7,6 +7,7 @@ gem 'rails', '4.0.1'
 gem 'jquery-rails'
 gem 'haml-rails'
 gem 'twilio-ruby'
+gem 'lookout-clickatell'
 gem 'jquery-placeholder-rails'
 
 gem 'devise'

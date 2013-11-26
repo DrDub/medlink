@@ -19,6 +19,8 @@ Medlink::Application.routes.draw do
 
   resources :supplies, only: [:index]
 
+  resource :sms
+
   namespace :admin do
     resources :users, only: [:new, :create, :edit, :update]
     post 'users/uploadCSV' => 'users#uploadCSV'

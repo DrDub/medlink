@@ -119,6 +119,7 @@ GEM
       addressable (~> 2.3)
     letter_opener (1.1.2)
       launchy (~> 2.2)
+    lookout-clickatell (0.8.3)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -265,6 +266,7 @@ DEPENDENCIES
   jquery-placeholder-rails
   jquery-rails
   letter_opener
+  lookout-clickatell
   newrelic_rpm
   pg
   pry
