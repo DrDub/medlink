@@ -9,15 +9,6 @@ class SMS
     @message = message
   end
 
-# TODO (#164): Add this for ClickaTell.
-#  def initialize config # ClickaTell
-#    @config = config
-#  end
-#  
-#  def create recipient, message_text # Clickatell
-#    api.send_message(recipient, message_text)
-#  end
-
   def self.configured?
     %w{ ACCOUNT_SID AUTH PHONE_NUMBER }.all? do |key|
       ENV["TWILIO_#{key}"].present?
@@ -45,6 +36,11 @@ class SMS
     raise ParseError.new unless data[:pcvid] && data[:shortcode]
     data
   end
+
+# TODO (#164): Add next 3 lines to deliver action for ClickaTell.
+#  def create recipient, message_text # Clickatell
+#    api.send_message(recipient, message_text)
+#  end
 
   def deliver
     return unless SMS.configured? || defined?(SmsSpec)
@@ -78,6 +74,8 @@ private
       @config[:api_key],
       @config[:username],
       @config[:password]
+#TODO: (#164): Use this instead of config: api = Clickatell::API.authenticate(
+#      ENV["CLICKATELL_API_KEY"], ENV["CLICKATELL_LOGIN"], ENV["CLICKATELL_PASSWORD"])
     )
   end
 end
