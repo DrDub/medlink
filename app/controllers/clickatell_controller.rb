@@ -2,15 +2,7 @@
 
 require 'clickatell'
 
-class ClickatellController
-
-  def initialize(config)
-    @config = config
-  end
-  
-  def create(recipient, message_text)
-    api.send_message(recipient, message_text)
-  end
+class ClickatellController  < ApplicationController
 
   def receive
     Rails.logger.info( "Received SMS: #{params}" )
@@ -25,7 +17,7 @@ class ClickatellController
     head :no_content
   end
 
-private
+  private
 
   def list
     raise "Not Implemented"
@@ -33,16 +25,9 @@ private
 
   def create_order
     response = begin
-      sms = SMS.new(CLICKATELL_CONFIG)
-#      sms.create(params[:recipient], params[:message_text])
       data  = SMS.parse params
-#      flash[:notice] = "Message sent succesfully!"
       order = Order.create_from_text data
       order.confirmation_message
-      redirect_to :back
-    rescue Clickatell::API::Error => e
-      flash[:error] = "Clickatell API error: #{e.message}"
-      redirect_to :back
     rescue SMS::ParseError => e
       I18n.t 'order.unparseable'
     rescue => e
@@ -51,12 +36,18 @@ private
     end
     SMS.new(params[:From], response).deliver
   end
-  
-  def api
-    @api ||= Clickatell::API.authenticate(
-      @config[:api_key],
-      @config[:username],
-      @config[:password]
-    )
+
+  #TODO: (#164): Merge Clickatell's create and Twilio's create_order.
+  def create # Clickatell
+    response = begin
+      sms = SMS.new(CLICKATELL_CONFIG)
+      sms.create(params[:recipient], params[:message_text])
+      flash[:notice] = "Message sent succesfully!"
+      redirect_to :back
+    rescue Clickatell::API::Error => e
+      flash[:error] = "Clickatell API error: #{e.message}"
+      redirect_to :back
+    end
   end
+
 end
