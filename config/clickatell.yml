@@ -1,0 +1,3 @@
+api_key: ENV['CLICKATELL_API_KEY']
+username: jasnow
+password: ENV['CLICKATELL_PASSWORD']
