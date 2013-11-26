@@ -9,6 +9,15 @@ class SMS
     @message = message
   end
 
+# TODO (#164): Add this for ClickaTell.
+#  def initialize config # ClickaTell
+#    @config = config
+#  end
+#  
+#  def create recipient, message_text # Clickatell
+#    api.send_message(recipient, message_text)
+#  end
+
   def self.configured?
     %w{ ACCOUNT_SID AUTH PHONE_NUMBER }.all? do |key|
       ENV["TWILIO_#{key}"].present?
@@ -62,4 +71,13 @@ class SMS
     I18n.t!(translation).squish
   end
 
+private
+
+  def api # ClickaTell
+    @api ||= Clickatell::API.authenticate(
+      @config[:api_key],
+      @config[:username],
+      @config[:password]
+    )
+  end
 end
