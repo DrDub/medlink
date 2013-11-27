@@ -67,6 +67,4 @@ Medlink::Application.configure do
   config.active_support.deprecation = :notify
 
   config.eager_load = true
-
-  CLICKATELL_CONFIG = YAML.load(File.open(File.join(Rails.root, 'config', 'clickatell.yml')))
 end

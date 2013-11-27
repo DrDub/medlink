@@ -32,7 +32,7 @@ class TwilioController < ApplicationController
       Rails.logger.info "Error in `create_order`: #{e.message}"
       SMS.friendly e.message
     end
-    SMS.new(params[:From], response).deliver
+    SMS.new(params[:From], response).twilio_deliver
   end
 
 end

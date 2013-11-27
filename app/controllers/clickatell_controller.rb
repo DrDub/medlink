@@ -34,20 +34,7 @@ class ClickatellController  < ApplicationController
       Rails.logger.info "Error in `create_order`: #{e.message}"
       SMS.friendly e.message
     end
-    SMS.new(params[:From], response).deliver
-  end
-
-  #TODO: (#164): Merge Clickatell's create and Twilio's create_order.
-  def create # Clickatell
-    response = begin
-      sms = SMS.new(CLICKATELL_CONFIG)
-      sms.create(params[:recipient], params[:message_text])
-      flash[:notice] = "Message sent succesfully!"
-      redirect_to :back
-    rescue Clickatell::API::Error => e
-      flash[:error] = "Clickatell API error: #{e.message}"
-      redirect_to :back
-    end
+    SMS.new(params[:From], response).clickatell_deliver
   end
 
 end
