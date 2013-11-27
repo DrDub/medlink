@@ -9,9 +9,15 @@ class SMS
     @message = message
   end
 
-  def self.configured?
+  def self.twilio_configured?
     %w{ ACCOUNT_SID AUTH PHONE_NUMBER }.all? do |key|
       ENV["TWILIO_#{key}"].present?
+    end
+  end
+
+  def self.clickatell_configured?
+    %w{ API_KEY LOGIN PASSWORD }.all? do |key|
+      ENV["CLICKATELL_#{key}"].present?
     end
   end
 
@@ -37,13 +43,8 @@ class SMS
     data
   end
 
-# TODO (#164): Add next 3 lines to deliver action for ClickaTell.
-#  def create recipient, message_text # Clickatell
-#    api.send_message(recipient, message_text)
-#  end
-
-  def deliver
-    return unless SMS.configured? || defined?(SmsSpec)
+  def twilio_deliver
+    return unless SMS.twilio_configured? || defined?(SmsSpec)
     # In the test env, this client should be monkey-patched by sms-spec
     client = Twilio::REST::Client.new(ENV['TWILIO_ACCOUNT_SID'],
                                       ENV['TWILIO_AUTH'])
@@ -52,6 +53,19 @@ class SMS
       to:   phone,
       body: message
     )
+  end
+
+  def clickatell_deliver
+    return unless SMS.clickatell_configured? || defined?(SmsSpec)
+
+    # Only use this in dev or test!!! Clickatell::API.debug_mode = true
+    # Based on: https://github.com/lookout/clickatell
+#FIXME (#164)
+    api = Clickatell::API.authenticate(
+      ENV["CLICKATELL_API_KEY"],
+      ENV["CLICKATELL_LOGIN"],
+      ENV["CLICKATELL_PASSWORD"])
+    api.send_message(phone, message)
   end
 
   def self.friendly message
@@ -67,15 +81,4 @@ class SMS
     I18n.t!(translation).squish
   end
 
-private
-
-  def api # ClickaTell
-    @api ||= Clickatell::API.authenticate(
-      @config[:api_key],
-      @config[:username],
-      @config[:password]
-#TODO: (#164): Use this instead of config: api = Clickatell::API.authenticate(
-#      ENV["CLICKATELL_API_KEY"], ENV["CLICKATELL_LOGIN"], ENV["CLICKATELL_PASSWORD"])
-    )
-  end
 end
