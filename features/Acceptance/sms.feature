@@ -1,10 +1,14 @@
-Feature: SMS
+Feature: Clickatell SMS
   In order to have medical supplies during the whole deployment
   A user
-  Should be able to submit a request by SMS for replacement medical supplies
+  Should be able to submit a Clickatell SMS request for replacements
 
   Background:
     Given the default user exists
+
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# NOTE: Add these scenarios are for Clickatell functionalily.
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #----------------------------------------------------------------------
 @wip
@@ -19,12 +23,6 @@ Feature: SMS
       | pcv   |
       | pcmo  |
       | admin |
-
-#......................................................................
-#ERROR/BAD VALUES
-
-# NOTE: Assuming "Special Instructions Area" is optional field.
-# NOTE: Unclear how location, qty, and dose are bad.
 
 #......................................................................
 @wip
@@ -109,18 +107,28 @@ Feature: SMS
       | pcmo  |
       | admin |
 
+######################################################################
+#TODO: below
+
 #FIXME: Scenario: User gives a bad location value. (AL: not validation)
 #FIXME: Scenario: User gives a bad dose value. - H (invalid dose) (AL: not validation)
 
 #......................................................................
+#ERROR/BAD VALUES
+
+# NOTE: Assuming "Special Instructions Area" is optional field.
+# NOTE: Unclear how location, qty, and dose are bad.
+
+#......................................................................
 #OTHER
-# TODO: P4(suggorate request), M4 (EMAIL TEXT that goes with P2...)
-# TODO/SMS(i guess):
+
+#TODO: P4(suggorate request), M4 (EMAIL TEXT that goes with P2...)
+#TODO/SMS(i guess):
 # L (bad pw)
-# TODO: M1 ("EMAIL TEXT that goes with sms message RE1 thru RE4 (msg redundancy)
+#TODO: M1 ("EMAIL TEXT that goes with sms message RE1 thru RE4 (msg redundancy)
 
 #TODO: F invalid pcvid
 #TODO: M2 - "EMAIL TEXT tha goes with sms message P4) (msg dup)
 #TODO: M1 - "EMAIL TEXT tha goes with sms message RE1 to RE4 (msg dup)
 
-# TODO: M4 (EMAIL TEXT that goes with P2...)
+#TODO: M4 (EMAIL TEXT that goes with P2...)
