@@ -6,6 +6,18 @@ describe ClickatellController do
   let(:number) { '+14049390122' }
   let(:current_user) { FactoryGirl.create(:user, pcv_id: '123456') }
 
+  before do
+    # Got TEST NUMBER FROM: http://forums.clickatell.com/clickatell/
+    #    topics/clickatell_sandbox_similar_to_paypal_sandbox
+    @to_number   = '27999900001' # TEST NUMBER
+    @from_number = '27999900005' # TEST NUMBER
+    @api = Clickatell::API.authenticate(
+      ENV["CLICKATELL_API_KEY"],
+      ENV["CLICKATELL_LOGIN"],
+      ENV["CLICKATELL_PASSWORD"]
+    )
+  end
+
   before(:each) do
     FactoryGirl.create :supply, shortcode: 'ASDF'
     sign_in current_user
@@ -20,13 +32,14 @@ describe ClickatellController do
       unrecognized_pcvid:     'XXX,    ASDF, 30mg, 50, Somewhere',
       unrecognized_shortcode: '123456, XXX,  30mg, 50, Somewhere'
     }.each do |key, msg|
-      it "sends order.#{key} when appropriate" 
+      it "sends order.#{key} when appropriate" do
+        expect { 
+          @api.send_message(@to_number, msg)
+        }.to raise_error("No Credit Left")
 #FIXME (#164)
-#do
-#        post :receive, From: number, Text: msg
-#        open_last_text_message_for number
+#        open_last_text_message_for @to_number
 #        current_text_message.should have_body I18n.t "order.#{key}"
-#      end
+     end
     end
 
     # -- English translations -----
@@ -65,16 +78,16 @@ describe ClickatellController do
       end
     end
 
-    it 'notifies on duplicate submission' 
-#FIXME (#164)
-#do
-#      msg = '123456, ASDF, 30mg, 50, Somewhere'
-#      3.times do
-#        post :receive, From: number, Text: msg
-#        open_last_text_message_for number
-#      end
-#      current_text_message.should have_body I18n.t "order.duplicate_order"
-#    end
+    it 'notifies on duplicate submission' do
+      msg = '123456, ASDF, 30mg, 50, Somewhere'
+      3.times do
+        expect { 
+          @api.send_message(@to_number, msg)
+        }.to raise_error("No Credit Left")
+#FIXME (#164)       open_last_text_message_for @to_number
+      end
+#FIXME (#164)       current_text_message.should have_body I18n.t "order.duplicate_order"
+    end
 
   end
 end
