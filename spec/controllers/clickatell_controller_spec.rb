@@ -40,6 +40,7 @@ describe ClickatellController do
 #        open_last_text_message_for @to_number
 #        current_text_message.should have_body I18n.t "order.#{key}"
      end
+
     end
 
     # -- English translations -----
